@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>African health studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <h1>African health studio</h1>
+                <span class="badge">Audio Flamingo 3</span>
+            </div>
+            <div class="status-bar">
+                <span id="connection-status" class="status disconnected">● Disconnected</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="media-section">
+                <div class="video-container">
+                    <video id="webcam-video" autoplay playsinline muted></video>
+                    <div class="overlay">
+                        <span id="listening-status" class="hidden">
+                            <span class="pulse-dot"></span> Listening...
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="audio-visualizer">
+                    <canvas id="waveform" width="800" height="100"></canvas>
+                </div>
+
+                <div class="controls">
+                    <button id="start-btn" class="btn primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 15C13.6569 15 15 13.6569 15 12V6C15 4.34315 13.6569 3 12 3C10.3431 3 9 4.34315 9 6V12C9 13.6569 10.3431 15 12 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M19 10V12C19 15.866 15.866 19 12 19C8.13401 19 5 15.866 5 12V10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M12 19V23" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 23H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Start Conversation
+                    </button>
+                    <button id="stop-btn" class="btn danger" disabled>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="6" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        Stop
+                    </button>
+                    <button id="test-audio-btn" class="btn secondary">Test Output</button>
+                </div>
+            </div>
+
+            <div class="chat-section">
+                <div class="conversation-log" id="conversation-log">
+                    <div class="empty-state">
+                        <p>Start the conversation to see transcription and responses here.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

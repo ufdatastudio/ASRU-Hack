@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'African health studio',
-  description: 'Real-time Conversational Audio with Audio Flamingo 3',
+  description: 'Mental health support for Africa - accessible, compassionate, and culturally aware mental wellness platform',
 };
 
 export default function RootLayout({

@@ -70,10 +70,19 @@ export function useMediaStream() {
       }
       
       if (audioTrack) {
-        // Ensure audio track starts enabled if audio is requested
-        audioTrack.enabled = microphoneEnabled && constraints.audio;
-        setMicrophoneEnabled(audioTrack.enabled);
-      } else if (!constraints.audio) {
+        // Always enable audio track if audio was requested (user can mute later)
+        if (constraints.audio) {
+          audioTrack.enabled = true;
+          setMicrophoneEnabled(true);
+        } else {
+          audioTrack.enabled = false;
+          setMicrophoneEnabled(false);
+        }
+      } else if (constraints.audio) {
+        // Audio was requested but not available
+        setMicrophoneEnabled(false);
+        console.warn('Audio was requested but no audio track available');
+      } else {
         setMicrophoneEnabled(false);
       }
 
@@ -110,9 +119,27 @@ export function useMediaStream() {
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to access media devices';
       setError(message);
+      setIsRecording(false);
+      // Clean up any tracks we might have created
+      if (videoTrackRef.current) {
+        try {
+          videoTrackRef.current.stop();
+        } catch (e) {
+          // Ignore errors during cleanup
+        }
+        videoTrackRef.current = null;
+      }
+      if (audioTrackRef.current) {
+        try {
+          audioTrackRef.current.stop();
+        } catch (e) {
+          // Ignore errors during cleanup
+        }
+        audioTrackRef.current = null;
+      }
       throw new Error(message);
     }
-  }, [webcamEnabled, microphoneEnabled]);
+  }, []);
 
   const toggleWebcam = useCallback(() => {
     if (videoTrackRef.current) {
@@ -133,19 +160,55 @@ export function useMediaStream() {
   }, []);
 
   const stopStream = useCallback(() => {
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
+    // Stop media recorder
+    if (mediaRecorderRef.current) {
+      if (mediaRecorderRef.current.state !== 'inactive') {
+        try {
+          mediaRecorderRef.current.stop();
+        } catch (e) {
+          console.warn('Error stopping MediaRecorder:', e);
+        }
+      }
+      mediaRecorderRef.current = null;
     }
 
+    // Stop all tracks from current stream state
     if (stream) {
-      stream.getTracks().forEach((track) => track.stop());
+      stream.getTracks().forEach((track) => {
+        try {
+          track.stop();
+        } catch (e) {
+          console.warn('Error stopping track:', e);
+        }
+      });
       setStream(null);
     }
 
-    videoTrackRef.current = null;
-    audioTrackRef.current = null;
+    // Also stop tracks from refs as a fallback
+    if (videoTrackRef.current) {
+      try {
+        videoTrackRef.current.stop();
+      } catch (e) {
+        console.warn('Error stopping video track:', e);
+      }
+      videoTrackRef.current = null;
+    }
+
+    if (audioTrackRef.current) {
+      try {
+        audioTrackRef.current.stop();
+      } catch (e) {
+        console.warn('Error stopping audio track:', e);
+      }
+      audioTrackRef.current = null;
+    }
+
+    // Clear chunks
+    chunksRef.current = [];
+    
+    // Update state
     setIsRecording(false);
-    mediaRecorderRef.current = null;
+    setError(null);
   }, [stream]);
 
   useEffect(() => {

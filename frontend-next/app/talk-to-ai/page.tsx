@@ -27,7 +27,7 @@ export default function TalkToAI() {
   const wsPort = '8000';
   const wsUrl = `${wsProtocol}//${wsHost}:${wsPort}/ws/audio`;
 
-  const { isConnected, send, onMessage } = useWebSocket(wsUrl);
+  const { isConnected, isConnecting, error: wsError, send, onMessage } = useWebSocket(wsUrl);
   const { 
     stream, 
     isRecording, 
@@ -72,6 +72,13 @@ export default function TalkToAI() {
   }, [onMessage, addMessage]);
 
   const handleStart = useCallback(async () => {
+    if (!isConnected) {
+      const errorMsg = 'WebSocket is not connected. Please wait and try again.';
+      addMessage(`Error: ${errorMsg}`, 'system');
+      alert(errorMsg);
+      return;
+    }
+
     try {
       // Request media based on user's webcam preference
       await startStream(
@@ -79,7 +86,10 @@ export default function TalkToAI() {
           // Send audio data if connected
           // Microphone mute is handled at the track level
           if (isConnected) {
-            send(blob);
+            const sent = send(blob);
+            if (!sent) {
+              console.warn('Failed to send audio blob - WebSocket may be disconnected');
+            }
           }
         },
         {
@@ -88,21 +98,50 @@ export default function TalkToAI() {
         }
       );
 
-      send(JSON.stringify({ type: 'start', model: selectedModel }));
+      // Send start message
+      const startMessage = JSON.stringify({ type: 'start', model: selectedModel });
+      const sent = send(startMessage);
+      if (!sent) {
+        throw new Error('Failed to send start message to server');
+      }
+
       setIsListening(true);
       addMessage(`AI conversation started with ${selectedModel}...`, 'system');
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to start conversation';
       addMessage(`Error: ${message}`, 'system');
       alert(message);
+      // Clean up on error
+      stopStream();
     }
-  }, [startStream, send, isConnected, addMessage, microphoneEnabled, webcamOn, selectedModel]);
+  }, [startStream, send, isConnected, addMessage, webcamOn, selectedModel, stopStream]);
 
   const handleStop = useCallback(() => {
-    stopStream();
-    send(JSON.stringify({ type: 'stop' }));
-    setIsListening(false);
-  }, [stopStream, send]);
+    if (!isRecording) {
+      return; // Already stopped
+    }
+
+    try {
+      // Send stop message first if connected
+      if (isConnected) {
+        const stopMessage = JSON.stringify({ type: 'stop' });
+        const sent = send(stopMessage);
+        if (!sent) {
+          console.warn('Failed to send stop message - WebSocket may be disconnected');
+        }
+      }
+
+      // Stop the media stream
+      stopStream();
+      setIsListening(false);
+      addMessage('Conversation ended.', 'system');
+    } catch (error) {
+      console.error('Error stopping conversation:', error);
+      // Still try to clean up
+      stopStream();
+      setIsListening(false);
+    }
+  }, [stopStream, send, isConnected, isRecording, addMessage]);
 
   const handleToggleWebcamOption = useCallback(() => {
     if (isRecording) {
@@ -127,11 +166,11 @@ export default function TalkToAI() {
           <div className="flex items-center gap-2">
             <div
               className={`w-2 h-2 rounded-full ${
-                isConnected ? 'bg-green-500' : 'bg-red-500'
-              } ${isConnected ? 'animate-pulse' : ''}`}
+                isConnected ? 'bg-green-500' : isConnecting ? 'bg-yellow-500' : 'bg-red-500'
+              } ${isConnected || isConnecting ? 'animate-pulse' : ''}`}
             />
             <span className="text-sm text-gray-400">
-              {isConnected ? 'Connected' : 'Disconnected'}
+              {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : wsError ? `Error: ${wsError}` : 'Disconnected'}
             </span>
           </div>
         </div>

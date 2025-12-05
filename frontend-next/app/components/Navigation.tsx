@@ -8,9 +8,10 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/', label: 'Home' },
-    { href: '/book-appointment', label: 'Book Appointment' },
-    { href: '/talk-to-doctor', label: 'Talk to Doctor' },
     { href: '/talk-to-ai', label: 'Talk to AI' },
+    { href: '/talk-to-doctor', label: 'Talk to Doctor' },
+    { href: '/book-appointment', label: 'Book Appointment' },
+    { href: '/people', label: 'People' },
     { href: '/about', label: 'About' },
     { href: '/contact', label: 'Contact' },
   ];

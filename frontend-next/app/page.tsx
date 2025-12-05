@@ -23,21 +23,24 @@ export default function Home() {
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary-400 to-primary-600 bg-clip-text text-transparent">
             Welcome to African health studio
           </h1>
-          <p className="text-xl text-gray-400 mb-12">
-            Your comprehensive healthcare platform with AI-powered doctor consultations
+          <p className="text-xl text-gray-400 mb-4">
+            Dedicated mental health support for Africa - accessible, compassionate, and culturally aware
+          </p>
+          <p className="text-lg text-gray-500 mb-12">
+            Your safe space for mental wellness, connecting you with AI-powered support and professional care
           </p>
           <div className="flex gap-4 justify-center">
-            <Link
-              href="/talk-to-doctor"
-              className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
-            >
-              Talk to Doctor
-            </Link>
             <Link
               href="/talk-to-ai"
               className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
             >
               Talk to AI
+            </Link>
+            <Link
+              href="/talk-to-doctor"
+              className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
+            >
+              Talk to Doctor
             </Link>
             <Link
               href="/book-appointment"
@@ -51,22 +54,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="container mx-auto px-6 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-dark-900 rounded-xl p-8 border border-dark-800">
-            <div className="w-12 h-12 bg-primary-600/20 rounded-lg flex items-center justify-center mb-4">
-              <svg className="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <h3 className="text-xl font-semibold mb-2">Talk to Doctor</h3>
-            <p className="text-gray-400 mb-4">
-              Connect with healthcare professionals through secure video calls
-            </p>
-            <Link href="/talk-to-doctor" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
-              Start consultation →
-            </Link>
-          </div>
-
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-dark-900 rounded-xl p-8 border border-dark-800">
             <div className="w-12 h-12 bg-primary-600/20 rounded-lg flex items-center justify-center mb-4">
               <svg className="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,10 +63,25 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Talk to AI</h3>
             <p className="text-gray-400 mb-4">
-              Have conversations with AI using audio. Webcam optional for privacy.
+              Get immediate mental health support through confidential AI conversations. Share your thoughts and feelings in a safe, judgment-free space.
             </p>
             <Link href="/talk-to-ai" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
               Start AI chat →
+            </Link>
+          </div>
+
+          <div className="bg-dark-900 rounded-xl p-8 border border-dark-800">
+            <div className="w-12 h-12 bg-primary-600/20 rounded-lg flex items-center justify-center mb-4">
+              <svg className="w-6 h-6 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h3 className="text-xl font-semibold mb-2">Talk to Doctor</h3>
+            <p className="text-gray-400 mb-4">
+              Connect with licensed mental health professionals who understand African cultural contexts and provide personalized care
+            </p>
+            <Link href="/talk-to-doctor" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
+              Start consultation →
             </Link>
           </div>
 
@@ -90,7 +93,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Easy Scheduling</h3>
             <p className="text-gray-400">
-              Book appointments at your convenience with our scheduling system
+              Book mental health consultations at your convenience, whenever you need support
             </p>
           </div>
 
@@ -102,7 +105,7 @@ export default function Home() {
             </div>
             <h3 className="text-xl font-semibold mb-2">Secure & Private</h3>
             <p className="text-gray-400">
-              Your health information is protected with end-to-end encryption
+              Your mental health conversations are completely confidential and protected with end-to-end encryption
             </p>
           </div>
         </div>
@@ -111,14 +114,23 @@ export default function Home() {
       {/* CTA Section */}
       <section className="container mx-auto px-6 py-16">
         <div className="bg-gradient-to-r from-primary-600/20 to-primary-800/20 rounded-2xl p-12 text-center border border-primary-600/30">
-          <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-          <p className="text-gray-300 mb-8">Connect with healthcare professionals today</p>
-          <Link
-            href="/talk-to-doctor"
-            className="inline-block px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
-          >
-            Start Consultation
-          </Link>
+          <h2 className="text-3xl font-bold mb-4">Your mental health matters</h2>
+          <p className="text-gray-300 mb-2">Take the first step towards better mental wellness</p>
+          <p className="text-gray-400 mb-8">We're here to support you on your journey - accessible, affordable, and culturally sensitive</p>
+          <div className="flex gap-4 justify-center">
+            <Link
+              href="/talk-to-ai"
+              className="inline-block px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-lg"
+            >
+              Get Support Now
+            </Link>
+            <Link
+              href="/talk-to-doctor"
+              className="inline-block px-8 py-4 bg-dark-800 hover:bg-dark-700 text-white font-semibold rounded-lg transition-colors border border-dark-700"
+            >
+              Book Professional Consultation
+            </Link>
+          </div>
         </div>
       </section>
     </div>

@@ -1,0 +1,6 @@
+# Ignore all audio files in data directory
+sessions/
+responses/
+*.wav
+*.webm
+

@@ -8,19 +8,19 @@ import scipy.io.wavfile as wavfile
 # Load models
 print("Loading models...")
 lm_model = AutoPeftModelForCausalLM.from_pretrained(
-    "/export/fs06/bodoom1/ckpts/lora_model_gh_langs_emotion_last/",
+    "/export/fs06/bodoom1/ckpts/lora_model_gh_langs/",
     load_in_4bit=False
 )
 lm_model = FastLanguageModel.for_inference(lm_model).to("cuda")
 tokenizer = AutoTokenizer.from_pretrained(
-    "/export/fs06/bodoom1/ckpts/lora_model_gh_langs_emotion_last/"
+    "/export/fs06/bodoom1/ckpts/lora_model_gh_langs/"
 )
 snac_model = SNAC.from_pretrained("hubertsiuzdak/snac_24khz").to("cuda")
 
 # Voice mappings
 VOICES = {
     "Akuapem": "kwaku",
-    "Asante":  "akosua",
+    "Asante":  "kofi",
     "Ewe":     "mawutor",
     "Hausa":   "tahiru",
 }
@@ -44,7 +44,7 @@ def redistribute_codes(code_list):
     ]
     return snac_model.decode(codes)
 
-def synthesize_speech(text, voice="kwaku", output_file="output.wav", 
+def synthesize_speech(text, voice="Asante", output_file="output.wav", 
                       temperature=0.6, top_p=0.9, repetition_penalty=1.1,
                       max_tokens=2048):
     """
@@ -52,7 +52,7 @@ def synthesize_speech(text, voice="kwaku", output_file="output.wav",
     
     Args:
         text: Input text to synthesize
-        voice: Voice to use (kwaku, akosua, mawutor, tahiru)
+        voice: Voice to use (kwaku, kofi, mawutor, tahiru)
         output_file: Path to save output WAV file
         temperature: Sampling temperature (0.0-1.0)
         top_p: Nucleus sampling parameter (0.0-1.0)
@@ -62,6 +62,7 @@ def synthesize_speech(text, voice="kwaku", output_file="output.wav",
     if voice not in VOICES:
         raise ValueError(f"Voice must be one of: {list(VOICES.keys())}")
     
+    voice = VOICES[voice]
     # Build prompt
     prompt = f"{voice}: {text}"
     
@@ -69,10 +70,10 @@ def synthesize_speech(text, voice="kwaku", output_file="output.wav",
     ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")[0]
     
     # Pad if too short
-    if ids.size(0) < 8:
-        pad_len = 15 - ids.size(0)
-        pad_tensor = torch.full((pad_len,), 128263, dtype=torch.int64, device="cuda")
-        ids = torch.cat([ids, pad_tensor], dim=0)
+    # if ids.size(0) < 8:
+    #     pad_len = 15 - ids.size(0)
+    #     pad_tensor = torch.full((pad_len,), 128263, dtype=torch.int64, device="cuda")
+    #     ids = torch.cat([ids, pad_tensor], dim=0)
     
     # Add special tokens
     seq = ids.unsqueeze(0)
@@ -115,7 +116,7 @@ def synthesize_speech(text, voice="kwaku", output_file="output.wav",
 
 # Example usage
 if __name__ == "__main__":
-    text = "Wo ho te sɛn?"
-    voice = "kwaku"  # Options: kwaku, akosua, mawutor, tahiru
+    text = "How are you doing today?"
+    voice = "Ewe"  # Options: kwaku, akosua, mawutor, tahiru
     
     synthesize_speech(text, voice=voice, output_file="output.wav")
